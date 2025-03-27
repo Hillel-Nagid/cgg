@@ -5,39 +5,39 @@ fn main() {
     match matches.subcommand() {
         Some(("fmt", _)) => {
             println!("Executing 'fmt' like 'go fmt'");
-            // Add your logic for the 'fmt' command here
+            // clang-format
         }
         Some(("get", _)) => {
             println!("Executing 'get' like 'go get'");
-            // Add your logic for the 'get' command here
+            // url to git repo and save to deps dir
         }
         Some(("list", _)) => {
             println!("Executing 'list' like 'go list'");
-            // Add your logic for the 'list' command here
+            // read from lock file
         }
         Some(("run", _)) => {
             println!("Executing 'run' like 'go run'");
-            // Add your logic for the 'run' command here
+            // compile to temporary file and run using GCC
         }
         Some(("build", _)) => {
             println!("Executing 'build' like 'cargo build'");
-            // Add your logic for the 'build' command here
+            // compile using GCC
         }
         Some(("remove", _)) => {
             println!("Executing 'remove' like 'cargo remove'");
-            // Add your logic for the 'remove' command here
+            // remove from deps dir and from lock file
         }
         Some(("update", _)) => {
             println!("Executing 'update' like 'cargo update'");
-            // Add your logic for the 'update' command here
+            // update lock file and deps dir
         }
         Some(("search", _)) => {
             println!("Executing 'search' like 'cargo search'");
-            // Add your logic for the 'search' command here
+            // search GitHub
         }
         Some(("init", _)) => {
             println!("Executing 'init' like 'cargo init'");
-            // Add your logic for the 'init' command here
+            // create a new project with a template
         }
         _ => unreachable!(), // If no subcommand was used, this should not happen
     }
