@@ -1,4 +1,9 @@
-use clap::Command;
+use std::ffi::OsString;
+
+use clap::{ Command, Parser };
+
+#[derive(Parser)]
+struct RunArgs {}
 
 fn main() {
     let matches = cli().get_matches();
@@ -15,13 +20,31 @@ fn main() {
             println!("Executing 'list' like 'go list'");
             // read from lock file
         }
-        Some(("run", _)) => {
-            println!("Executing 'run' like 'go run'");
+        Some(("run", args)) => {
             // compile to temporary file and run using GCC
+            let run_args = args
+                .get_many::<OsString>("id")
+                .into_iter()
+                .flatten()
+                .collect::<Vec<_>>();
+            let result = std::process::Command::new("gcc").args(run_args).status().unwrap();
+            if !result.success() {
+                eprintln!("Failed to run GCC");
+                std::process::exit(1);
+            }
         }
-        Some(("build", _)) => {
-            println!("Executing 'build' like 'cargo build'");
+        Some(("build", args)) => {
             // compile using GCC
+            let build_args = args
+                .get_many::<OsString>("id")
+                .into_iter()
+                .flatten()
+                .collect::<Vec<_>>();
+            let result = std::process::Command::new("gcc").args(build_args).status().unwrap();
+            if !result.success() {
+                eprintln!("Failed to run GCC");
+                std::process::exit(1);
+            }
         }
         Some(("remove", _)) => {
             println!("Executing 'remove' like 'cargo remove'");
@@ -53,6 +76,7 @@ fn cli() -> Command {
         .subcommand(Command::new("get"))
         .subcommand(Command::new("list"))
         .subcommand(Command::new("run"))
+        .allow_external_subcommands(true)
         .subcommand(Command::new("build"))
         .subcommand(Command::new("remove"))
         .subcommand(Command::new("update"))
