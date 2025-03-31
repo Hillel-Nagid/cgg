@@ -1,9 +1,6 @@
-use std::ffi::OsString;
+use clap::{ Arg, ArgAction, Command };
 
-use clap::{ Command, Parser };
-
-#[derive(Parser)]
-struct RunArgs {}
+const DEFAULT_ARGS: [&'static str; 5] = ["-Wextra", "-Wall", "-Wvla", "-lm", "-std=c99"];
 
 fn main() {
     let matches = cli().get_matches();
@@ -22,11 +19,7 @@ fn main() {
         }
         Some(("run", args)) => {
             // compile to temporary file and run using GCC
-            let run_args = args
-                .get_many::<OsString>("id")
-                .into_iter()
-                .flatten()
-                .collect::<Vec<_>>();
+            let run_args = args.get_many::<String>("id").into_iter().flatten().collect::<Vec<_>>();
             let result = std::process::Command::new("gcc").args(run_args).status().unwrap();
             if !result.success() {
                 eprintln!("Failed to run GCC");
@@ -35,11 +28,22 @@ fn main() {
         }
         Some(("build", args)) => {
             // compile using GCC
+            let mut parsed_args: Vec<String> = vec![];
+            if let Some(default) = args.get_one::<bool>("default") {
+                if *default {
+                    for arg in DEFAULT_ARGS.iter() {
+                        parsed_args.push(String::from(*arg));
+                    }
+                }
+            }
             let build_args = args
-                .get_many::<OsString>("id")
+                .get_many::<String>("gcc_args")
                 .into_iter()
                 .flatten()
                 .collect::<Vec<_>>();
+            for arg in build_args.iter() {
+                parsed_args.push((*arg).clone());
+            }
             let result = std::process::Command::new("gcc").args(build_args).status().unwrap();
             if !result.success() {
                 eprintln!("Failed to run GCC");
@@ -76,8 +80,16 @@ fn cli() -> Command {
         .subcommand(Command::new("get"))
         .subcommand(Command::new("list"))
         .subcommand(Command::new("run"))
-        .allow_external_subcommands(true)
-        .subcommand(Command::new("build"))
+        .subcommand(
+            Command::new("build")
+                .arg(Arg::new("default").short('d').action(ArgAction::SetTrue))
+                .arg(
+                    Arg::new("gcc_args")
+                        .trailing_var_arg(true)
+                        .action(ArgAction::Append)
+                        .num_args(0..)
+                )
+        )
         .subcommand(Command::new("remove"))
         .subcommand(Command::new("update"))
         .subcommand(Command::new("search"))
