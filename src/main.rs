@@ -1,6 +1,6 @@
-use clap::{ Arg, ArgAction, Command };
+mod commands;
 
-const DEFAULT_ARGS: [&'static str; 5] = ["-Wextra", "-Wall", "-Wvla", "-lm", "-std=c99"];
+use clap::{ Arg, ArgAction, Command };
 
 fn main() {
     let matches = cli().get_matches();
@@ -28,27 +28,7 @@ fn main() {
         }
         Some(("build", args)) => {
             // compile using GCC
-            let mut parsed_args: Vec<String> = vec![];
-            if let Some(default) = args.get_one::<bool>("default") {
-                if *default {
-                    for arg in DEFAULT_ARGS.iter() {
-                        parsed_args.push(String::from(*arg));
-                    }
-                }
-            }
-            let build_args = args
-                .get_many::<String>("gcc_args")
-                .into_iter()
-                .flatten()
-                .collect::<Vec<_>>();
-            for arg in build_args.iter() {
-                parsed_args.push((*arg).clone());
-            }
-            let result = std::process::Command::new("gcc").args(build_args).status().unwrap();
-            if !result.success() {
-                eprintln!("Failed to run GCC");
-                std::process::exit(1);
-            }
+            commands::build::run(args);
         }
         Some(("remove", _)) => {
             println!("Executing 'remove' like 'cargo remove'");
