@@ -1,12 +1,14 @@
 use std::{ fs::read_dir, path::PathBuf };
-
+use std::env;
 const DEFAULT_ARGS: [&'static str; 5] = ["-Wextra", "-Wall", "-Wvla", "-lm", "-std=c99"];
 pub fn parse_args(args: &clap::ArgMatches) -> Vec<String> {
     let mut parsed_args: Vec<String> = vec![];
     if let Some(default) = args.get_one::<bool>("default") {
         if *default {
-            for arg in DEFAULT_ARGS.iter() {
-                parsed_args.push(String::from(*arg));
+            let default_flags = env::var("CGG_DEFAULT_FLAGS").unwrap_or(DEFAULT_ARGS.join(" "));
+            let env_default_flags = default_flags.split_whitespace().collect::<Vec<_>>();
+            for arg in env_default_flags {
+                parsed_args.push(String::from(arg));
             }
         }
     }

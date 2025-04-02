@@ -7,4 +7,5 @@ pub mod remove;
 pub mod update;
 pub mod search;
 pub mod init;
+pub mod update_default;
 use super::lock_file;
