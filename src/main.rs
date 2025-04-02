@@ -1,5 +1,5 @@
 mod commands;
-
+mod lock_file;
 use clap::{ Arg, ArgAction, Command };
 
 fn main() {
@@ -19,12 +19,7 @@ fn main() {
         }
         Some(("run", args)) => {
             // compile to temporary file and run using GCC
-            let run_args = args.get_many::<String>("id").into_iter().flatten().collect::<Vec<_>>();
-            let result = std::process::Command::new("gcc").args(run_args).status().unwrap();
-            if !result.success() {
-                eprintln!("Failed to run GCC");
-                std::process::exit(1);
-            }
+            commands::run::run(args);
         }
         Some(("build", args)) => {
             // compile using GCC
@@ -42,8 +37,8 @@ fn main() {
             println!("Executing 'search' like 'cargo search'");
             // search GitHub
         }
-        Some(("init", _)) => {
-            println!("Executing 'init' like 'cargo init'");
+        Some(("init", args)) => {
+            commands::init::run(args);
             // create a new project with a template
         }
         _ => unreachable!(), // If no subcommand was used, this should not happen
@@ -74,4 +69,5 @@ fn cli() -> Command {
         .subcommand(Command::new("update"))
         .subcommand(Command::new("search"))
         .subcommand(Command::new("init"))
+        .subcommand(Command::new("change-default"))
 }
