@@ -4,36 +4,50 @@
 
 ### fmt
 
-`go fmt` like
+Formats the code using `clang-format`
 
-### get
+### <s>get</s>
 
-`go get` like
+To be implemented
 
 ### list
 
-`go list` like
+Lists the project dependencies
 
 ### run
 
-`go run` like
+compiles the program to a temporary file and executes it
 
 ### build
 
-`cargo build` like
+Compiles the program using GCC
 
-### remove
+### <s>remove</s>
 
-`cargo remove` like
+To be implemented
 
-### update
+### <s>update</s>
 
-`cargo update` like
+To be implemented
 
-### search
+### <s>search</s>
 
-`cargo search` like
+To be implemented
 
 ### init
 
-`cargo init` like
+Starts a new project
+
+### change-default
+
+Changes the default flags used by `build` and `run`
+
+## Compilation
+
+To compile the project, run `cargo build --release`
+
+## Prerequisites
+
+- Rust (for compiling the project itself, otherfwise not required)
+- GCC (for compilation)
+- Clang-format (for formatting)
