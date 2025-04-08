@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="*" Name="CGG" Version="1.0.0.0" Manufacturer="Hillel-Nagid"
+        UpgradeCode="a15781d1-a557-4198-99d1-339ff05da9bf" Language="1033" Codepage="1252">
+
+        <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="x64" />
+
+        <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+        <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFiles64Folder">
+                <Directory Id="INSTALLFOLDER" Name="cgg">
+                    <Directory Id="BINFOLDER" Name="bin">
+                        <Component Id="MainExecutable" Guid="d94f4af3-e230-4395-807d-f5e2da40b681"
+                            Win64="yes">
+                            <File Id="cgg.exe" Source=".\target\release\cgg.exe" KeyPath="yes" />
+                            <Environment Id="PATH" Name="PATH" Value="[BINFOLDER]" Permanent="no"
+                                Part="last" Action="set" System="yes" />
+                        </Component>
+                    </Directory>
+                    <Component Id="PowerShellScript" Guid="cb6c59d3-d922-4b52-96c1-8d133db9a7d5"
+                        Win64="yes">
+                        <File Id="InstallDepsPS1" Source=".\install_deps.ps1" KeyPath="yes" />
+                    </Component>
+                </Directory>
+            </Directory>
+        </Directory>
+
+        <!-- Define the Feature and include components -->
+        <Feature Id="ProductFeature" Title="CGG" Level="1">
+            <ComponentRef Id="MainExecutable" />
+            <ComponentRef Id="PowerShellScript" />
+        </Feature>
+
+        <CustomAction Id="RunInstallDeps"
+            Directory="INSTALLFOLDER"
+            ExeCommand="powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -NonInteractive -Command &quot;&amp; {Start-Process -FilePath powershell.exe -ArgumentList '-ExecutionPolicy Bypass -File \&quot;[INSTALLFOLDER]install_deps.ps1\&quot;' -WindowStyle Hidden -Wait}&quot;"
+            Execute="deferred"
+            Impersonate="no" />
+
+        <InstallExecuteSequence>
+            <Custom Action="RunInstallDeps" After="InstallFiles" />
+        </InstallExecuteSequence>
+    </Product>
+</Wix>

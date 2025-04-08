@@ -1,4 +1,4 @@
-use std::{ fs::read_dir, path::PathBuf };
+use std::{ fs::{ self, read_dir }, path::PathBuf, process::Stdio };
 
 pub fn run(args: &clap::ArgMatches) {
     let mut parsed_args = vec![];
@@ -32,9 +32,27 @@ pub fn run(args: &clap::ArgMatches) {
         eprintln!("No files to compile");
         std::process::exit(1);
     }
-    std::process::Command
-        ::new("clang-format")
-        .args(parsed_args)
-        .status()
-        .expect("Failed to run clang-format");
+    if parsed_args.is_empty() {
+        eprintln!("No files to format");
+        std::process::exit(1);
+    }
+    for path in parsed_args.iter() {
+        println!("Formatting {}...", path);
+        let mut command = std::process::Command::new("clang-format");
+        command.args(vec![path]).stdout(Stdio::piped());
+
+        let process = command.spawn().expect("Failed to run clang-format");
+        let output = process.wait_with_output().expect("Failed to get output");
+        if output.status.success() {
+            let formatted_code: String = String::from_utf8(output.stdout).expect(
+                "Failed to run clang-format"
+            );
+            fs::write(path, formatted_code).expect("Failed to write formatted code");
+        } else {
+            let error_message = String::from_utf8(output.stderr).expect(
+                "Failed to run clang-format"
+            );
+            eprintln!("clang-format failed:\n{}", error_message);
+        }
+    }
 }

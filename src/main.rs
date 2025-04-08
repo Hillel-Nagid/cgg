@@ -6,7 +6,7 @@ fn main() {
     let matches = cli().get_matches();
     match matches.subcommand() {
         Some(("fmt", args)) => {
-            println!("Executing 'fmt' like 'go fmt'");
+            println!("Formatting files...");
             commands::fmt::run(args);
         }
         Some(("get", _)) => {
@@ -18,9 +18,11 @@ fn main() {
             commands::list::run();
         }
         Some(("run", args)) => {
+            println!("Running program...");
             commands::run::run(args);
         }
         Some(("build", args)) => {
+            println!("Building program...");
             commands::build::run(args);
         }
         Some(("remove", _)) => {
@@ -39,9 +41,11 @@ fn main() {
             // search GitHub
         }
         Some(("init", args)) => {
+            println!("Initializing new project...");
             commands::init::run(args);
         }
         Some(("change-default", args)) => {
+            println!("Changing default flags...");
             commands::update_default::run(args);
         }
         _ => unreachable!(), // If no subcommand was used, this should not happen
