@@ -46,6 +46,10 @@ Changes the default flags used by `build` and `run`
 
 To compile the project, run `cargo build --release`
 
+## Build WiX installer
+
+run `cargo wix` and find the installer at `target/wix/*.msi`
+
 ## Prerequisites
 
 - Rust (for compiling the project itself, otherfwise not required)

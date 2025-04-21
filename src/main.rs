@@ -53,7 +53,7 @@ fn main() {
 }
 fn cli() -> Command {
     Command::new("cgg")
-        .version("0.1.0")
+        .version("0.1.1")
         .author("Hillel Nagid <hillel.nagid@mail.huji.ac.il>")
         .about("A GCC wrapper that resembles the Go and Cargo CLIs")
         .subcommand_required(true)
