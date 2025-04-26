@@ -73,7 +73,9 @@ fn cli() -> Command {
                 .arg(
                     Arg::new("gcc_args")
                         .trailing_var_arg(true)
+                        .value_parser(clap::value_parser!(String))
                         .action(ArgAction::Append)
+                        .allow_hyphen_values(true)
                         .num_args(0..)
                 )
         )
@@ -83,7 +85,9 @@ fn cli() -> Command {
                 .arg(
                     Arg::new("gcc_args")
                         .trailing_var_arg(true)
+                        .value_parser(clap::value_parser!(String))
                         .action(ArgAction::Append)
+                        .allow_hyphen_values(true)
                         .num_args(0..)
                 )
         )
@@ -95,7 +99,9 @@ fn cli() -> Command {
             Command::new("change-default").arg(
                 Arg::new("flags")
                     .trailing_var_arg(true)
+                    .value_parser(clap::value_parser!(String))
                     .action(ArgAction::Append)
+                    .allow_hyphen_values(true)
                     .num_args(0..)
             )
         )
