@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product Id="*" Name="CGG" Version="1.0.0.0" Manufacturer="Hillel-Nagid"
+    <Product Id="*" Name="CGG" Version="1.0.0" Manufacturer="Hillel-Nagid"
         UpgradeCode="a15781d1-a557-4198-99d1-339ff05da9bf" Language="1033" Codepage="1252">
 
         <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="x64" />
